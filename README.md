@@ -9,6 +9,10 @@ It leverages LightGBM, SMOTE (for class imbalance handling), and a Streamlit web
 🚀 Built end-to-end — from data preprocessing and model training to deployment.
 
 
+
+
+
+
 🧠 Tech Stack
 
 Python 3.12
@@ -23,7 +27,13 @@ Streamlit – web app interface
 
 Joblib – model serialization
 
+
+
+
+
 ⚙️ Installation & Setup
+
+
 1️⃣ Clone the repository
 git clone https://github.com/<your-username>/credit-fraud-detection.git
 cd credit-fraud-detection
@@ -43,6 +53,11 @@ python train_model.py
 5️⃣ Run the Streamlit app
 streamlit run app.py
 
+
+
+
+
+
 🧩 Workflow
 
 Data Loading → Load creditcard.csv
@@ -58,6 +73,11 @@ Evaluation → View precision, recall, and F1-score
 Deployment → Predict transactions using the Streamlit dashboard
 
 
+
+
+
+
+
 🧾 Sample Output
 
 Classification Report:
@@ -69,6 +89,10 @@ Classification Report:
     accuracy                           0.99    113728
    macro avg       0.99      0.99      0.99    113728
 weighted avg       0.99      0.99      0.99    113728
+
+
+
+
 
 
 
