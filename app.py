@@ -8,7 +8,7 @@
 # # -------------------------
 # # CONFIGURE GEMINI API KEY
 # # -------------------------
-# genai.configure(api_key="AIzaSyAqw34345456TEyG6Y7grnHl45e9X7ffa_v7T4ImFmE1234")  # 🔑 Replace with your key
+# genai.configure(api_key="")  # 🔑 Replace with your key
 # model_gemini = genai.GenerativeModel("gemini-1.5-flash")
 
 # # -------------------------
@@ -70,7 +70,7 @@ from dotenv import load_dotenv
 
 # Load environment variables (GEMINI_API_KEY)
 load_dotenv()
-genai.configure(api_key=os.getenv("AIzaSy4543434545Aqw6TEyG6ghjkdfg6Y7g454rnHle9X7ffa_v7T4ImFmE"))
+genai.configure(api_key=os.getenv(""))
 
 # Load model and scaler
 model = joblib.load("model.pkl")
