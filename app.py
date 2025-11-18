@@ -1,79 +1,56 @@
-
-
 import streamlit as st
-import joblib
 import numpy as np
-import pandas as pd
-import google.generativeai as genai
-import os
-from dotenv import load_dotenv
+import joblib
 
-# Load environment variables (GEMINI_API_KEY)
-load_dotenv()
-genai.configure(api_key=os.getenv(""))
+st.set_page_config(page_title="Credit Card Fraud Detection", layout="wide")
+st.title("💳 Credit Card Fraud Detection App")
+st.write("Enter transaction feature values to predict whether it is fraudulent.")
 
-# Load model and scaler
-model = joblib.load("model.pkl")
-scaler = joblib.load("scaler.pkl")
+# -----------------------------
+# Load Saved Model & Scaler
+# -----------------------------
+scaler = joblib.load("scaler1.pkl")
+model = joblib.load("model1.pkl")
 
-# Define all feature columns (same as training data)
-FEATURE_COLUMNS = ["Time"] + [f"V{i}" for i in range(1, 29)] + ["Amount"]
+# -----------------------------
+# Input UI
+# -----------------------------
+st.subheader("Enter Input Features (Time + V1 - V28 + Amount)")
 
-# Streamlit UI
-st.set_page_config(page_title="Credit Card Fraud Detection", page_icon="💳", layout="centered")
-st.title("💳 Credit Card Fraud Detection with LLM Reasoning")
-st.write("Enter transaction details to predict fraud and get an AI-generated explanation.")
+cols = st.columns(4)
+inputs = []
 
-st.markdown("---")
+# Time
+time = st.number_input("Time", value=0.0, format="%.2f")
+inputs.append(time)
 
-# Input fields for all 30 features
-st.subheader("🧾 Transaction Details")
+# V1–V28
+for i in range(1, 29):
+    col = cols[(i - 1) % 4]
+    val = col.number_input(f"V{i}", value=0.0, format="%.6f")
+    inputs.append(val)
 
-user_data = {}
-cols = st.columns(3)  # Divide inputs into 3 columns for neat layout
+# Amount
+amount = st.number_input("Amount", value=0.0, format="%.2f")
+inputs.append(amount)
 
-for idx, feature in enumerate(FEATURE_COLUMNS):
-    col = cols[idx % 3]
-    if feature == "Time":
-        user_data[feature] = col.number_input("⏱ Time (seconds since first transaction)", min_value=0.0, value=10.0)
-    elif feature == "Amount":
-        user_data[feature] = col.number_input("💰 Transaction Amount ($)", min_value=0.0, value=100.0)
-    else:
-        user_data[feature] = col.number_input(f"{feature}", value=0.0, step=0.01)
 
-# Convert user input to dataframe and scale
-input_df = pd.DataFrame([user_data])
-scaled_input = scaler.transform(input_df)
+# Predict button
+if st.button("Predict Fraud Status "):
+    features = np.array(inputs).reshape(1, -1)
 
-# Predict Button
-if st.button("🔍 Predict Fraud"):
-    pred = model.predict(scaled_input)[0]
-    prob = model.predict_proba(scaled_input)[0][1]
+    # Scale features
+    scaled = scaler.transform(features)
 
+    # Predict
+    pred = model.predict(scaled)[0]
+    proba = model.predict_proba(scaled)[0][1]
+
+    st.subheader(" Prediction Result")
     if pred == 1:
-        st.error(f"⚠️ This transaction is **FRAUDULENT** (Risk Score: {prob:.2f})")
+        st.error(f" Fraud Detected! Probability: {proba:.4f}")
     else:
-        st.success(f"✅ This transaction is **LEGITIMATE** (Risk Score: {prob:.2f})")
-
-    st.markdown("---")
-
-    # --- Gemini Reasoning ---
-    st.subheader("🤖 Gemini Explanation")
-    prompt = f"""
-    You are a financial fraud detection expert AI.
-    Given the following transaction data:
-    {user_data}
-
-    The ML model predicted this transaction as {'FRAUDULENT' if pred == 1 else 'LEGITIMATE'} 
-    with a fraud probability of {prob:.2f}.
-
-    Explain in simple human terms why this might be the case, highlighting which features
-    likely contributed most to the prediction.
-    """
-
-    model_gemini = genai.GenerativeModel("gemini-2.5-flash")
-    explanation = model_gemini.generate_content(prompt)
-    st.write(explanation.text)
+        st.success(f" Legit Transaction | Probability of Fraud: {proba:.4f}")
 
 st.markdown("---")
-st.caption("Built with ❤️ using Scikit-learn + Streamlit + Gemini AI")
+st.caption("Made with  using Machine Learning and Streamlit")
