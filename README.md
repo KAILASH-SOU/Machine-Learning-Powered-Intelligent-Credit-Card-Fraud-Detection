@@ -15,7 +15,7 @@ The model predicts whether a given transaction is **fraudulent (1)** or **legiti
 
 ---
 
-## 🚀 Project Workflow
+##  Project Workflow
 
 Below is the exact workflow followed in this project:
 
