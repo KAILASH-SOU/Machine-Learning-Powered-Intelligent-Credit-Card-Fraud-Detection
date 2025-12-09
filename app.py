@@ -3,7 +3,7 @@ import numpy as np
 import joblib
 
 st.set_page_config(page_title="Credit Card Fraud Detection", layout="wide")
-st.title("💳 Credit Card Fraud Detection App")
+st.title(" Credit Card Fraud Detection App")
 st.write("Enter transaction feature values to predict whether it is fraudulent.")
 
 # -----------------------------
