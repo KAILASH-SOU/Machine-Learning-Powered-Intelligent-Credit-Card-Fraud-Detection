@@ -1,6 +1,16 @@
+# Python
 __pycache__/
+*.pyc
 .env
-data/raw/
-data/processed/
-.dvc/
+.venv/
+
+# DVC
 .dvc/cache/
+
+# Ignore actual data files, NOT .dvc pointers
+data/raw/*.csv
+data/processed/*
+
+# OS
+.DS_Store
+che/
