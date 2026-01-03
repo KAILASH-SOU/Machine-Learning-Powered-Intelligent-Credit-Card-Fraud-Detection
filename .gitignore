@@ -7,10 +7,9 @@ __pycache__/
 # DVC
 .dvc/cache/
 
-# Ignore actual data files, NOT .dvc pointers
+# Ignore actual data files (NOT .dvc pointers)
 data/raw/*.csv
-data/processed/*
+data/processed/*.csv
 
 # OS
 .DS_Store
-che/
