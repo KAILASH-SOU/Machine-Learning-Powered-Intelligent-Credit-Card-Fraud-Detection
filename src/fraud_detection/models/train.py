@@ -1,119 +1,103 @@
 import pandas as pd
-import joblib
 import json
 import os
+import joblib
 import optuna
 
-from lightgbm import LGBMClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import roc_auc_score, average_precision_score
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    classification_report,
-    roc_auc_score,
-    average_precision_score
-)
-
-from imblearn.over_sampling import SMOTE
 
 
 def train_model(features_dir, model_dir, metrics_dir):
-   
+
+    
     # Load data
     
-    X_train_full = pd.read_csv(f"{features_dir}/X_train.csv")
+    X = pd.read_csv(f"{features_dir}/X_train.csv")
+    y = pd.read_csv(f"{features_dir}/y_train.csv").values.ravel()
     X_test = pd.read_csv(f"{features_dir}/X_test.csv")
-    y_train_full = pd.read_csv(f"{features_dir}/y_train.csv").values.ravel()
     y_test = pd.read_csv(f"{features_dir}/y_test.csv").values.ravel()
 
     
-    # Validation split
+    # Train / validation split
     
     X_train, X_val, y_train, y_val = train_test_split(
-        X_train_full,
-        y_train_full,
+        X,
+        y,
         test_size=0.2,
-        stratify=y_train_full,
+        stratify=y,
         random_state=42
     )
 
     
-    # Optuna objective (SMOTE ONLY HERE)
-    
+    # Optuna objective
+   
     def objective(trial):
-        # ---- Apply SMOTE on TRAIN ONLY ----
-        smote = SMOTE(
-            sampling_strategy=trial.suggest_float("smote_ratio", 0.1, 0.4),
-            random_state=42
-        )
-        X_res, y_res = smote.fit_resample(X_train, y_train)
 
         params = {
-            "n_estimators": trial.suggest_int("n_estimators", 300, 800),
-            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.2, log=True),
             "max_depth": trial.suggest_int("max_depth", 3, 12),
-            "num_leaves": trial.suggest_int("num_leaves", 20, 150),
-            "min_child_samples": trial.suggest_int("min_child_samples", 10, 100),
-            "subsample": trial.suggest_float("subsample", 0.6, 1.0),
-            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.6, 1.0),
-            "random_state": 42,
-            "n_jobs": -1
+            "min_samples_split": trial.suggest_int("min_samples_split", 2, 50),
+            "min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 30),
+            "class_weight": "balanced",
+            "random_state": 42
         }
 
-        model = LGBMClassifier(**params)
-        model.fit(X_res, y_res)
+        model = DecisionTreeClassifier(**params)
+        model.fit(X_train, y_train)
 
         y_val_proba = model.predict_proba(X_val)[:, 1]
-        return average_precision_score(y_val, y_val_proba)
+        pr_auc = average_precision_score(y_val, y_val_proba)
+
+        return pr_auc
 
     
-    # Run Optuna
-    
-    study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=40)
+    # Run Optuna (deterministic)
+   
+    sampler = optuna.samplers.TPESampler(seed=42)
+    study = optuna.create_study(direction="maximize", sampler=sampler)
+    study.optimize(objective, n_trials=30)
+
+    best_params = study.best_params
 
     
-    # Train final model (SMOTE again on full train)
+    # Train final model
     
-    smote = SMOTE(
-        sampling_strategy=study.best_params.pop("smote_ratio"),
+    final_model = DecisionTreeClassifier(
+        **best_params,
+        class_weight="balanced",
         random_state=42
     )
-    X_res, y_res = smote.fit_resample(X_train_full, y_train_full)
 
-    best_model = LGBMClassifier(
-        **study.best_params,
-        random_state=42,
-        n_jobs=-1
-    )
-
-    best_model.fit(X_res, y_res)
+    final_model.fit(X, y)
 
     
-    # Test evaluation (NO SMOTE)
+    # Test evaluation
     
-    y_test_proba = best_model.predict_proba(X_test)[:, 1]
-    y_test_pred = best_model.predict(X_test)
+    y_test_proba = final_model.predict_proba(X_test)[:, 1]
 
     metrics = {
+        "model": "DecisionTree + Optuna",
         "roc_auc": roc_auc_score(y_test, y_test_proba),
         "pr_auc": average_precision_score(y_test, y_test_proba),
-        "best_params": study.best_params,
-        "classification_report": classification_report(
-            y_test, y_test_pred, output_dict=True
-        )
+        "best_params": best_params
     }
 
     
     # Save artifacts
-   
+    
     os.makedirs(model_dir, exist_ok=True)
     os.makedirs(metrics_dir, exist_ok=True)
 
-    joblib.dump(best_model, f"{model_dir}/model.pkl")
+    joblib.dump(final_model, f"{model_dir}/model.pkl")
 
     with open(f"{metrics_dir}/metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
 
 if __name__ == "__main__":
-    import sys
-    train_model(sys.argv[1], sys.argv[2], sys.argv[3])
+    train_model(
+        features_dir="data/processed/features",
+        model_dir="models",
+        metrics_dir="metrics"
+    )
