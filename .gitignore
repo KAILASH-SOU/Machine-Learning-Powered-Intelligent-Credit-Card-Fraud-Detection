@@ -13,3 +13,5 @@ data/processed/*.csv
 
 # OS
 .DS_Store
+models/
+metrics/
