@@ -1,0 +1,25 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: PYTHONPATH=src python -m fraud_detection.models.train data/processed/features
+      models metrics
+    deps:
+    - path: data/processed/features
+      hash: md5
+      md5: 24b976430791a72316c533f4e3d68e71.dir
+      size: 158167198
+      nfiles: 5
+    - path: src/fraud_detection/models/train.py
+      hash: md5
+      md5: 804b2576bb282dcfcab7b3d2a99b19f7
+      size: 2707
+    outs:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: 46963e6d29f9a65e47aa4dfa94c9eb49
+      size: 255
+    - path: models
+      hash: md5
+      md5: 62920b26b90eab26d0e8f2b4071b7cd6.dir
+      size: 6871337
+      nfiles: 1
