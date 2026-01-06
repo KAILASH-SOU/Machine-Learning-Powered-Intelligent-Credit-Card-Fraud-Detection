@@ -16,3 +16,5 @@ data/processed/*.csv
 models/
 metrics/
 data/processed/
+/models
+/metrics
