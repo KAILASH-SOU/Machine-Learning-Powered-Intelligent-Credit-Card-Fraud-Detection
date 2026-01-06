@@ -7,9 +7,13 @@ __pycache__/
 # DVC
 .dvc/cache/
 
-# Ignore actual data files (NOT .dvc pointers)
-data/raw/*.csv
-data/processed/*.csv
+# ML artifacts (DVC-owned)
+models/
+metrics/
+
+# Data (actual files, not pointers)
+data/raw/
+data/processed/
 
 # OS
 .DS_Store
