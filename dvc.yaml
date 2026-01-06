@@ -1,10 +1,9 @@
 stages:
   train:
-    cmd: PYTHONPATH=src python -m fraud_detection.models.train data/processed/features models metrics
+    cmd: python src/fraud_detection/models/train.py data/processed/features models metrics
     deps:
       - src/fraud_detection/models/train.py
       - data/processed/features
     outs:
       - models
-    metrics:
-      - metrics/metrics.json
+      - metrics
