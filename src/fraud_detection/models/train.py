@@ -96,8 +96,10 @@ def train_model(features_dir, model_dir, metrics_dir):
 
 
 if __name__ == "__main__":
+    import sys
     train_model(
-        features_dir="data/processed/features",
-        model_dir="models",
-        metrics_dir="metrics"
+        features_dir=sys.argv[1],
+        model_dir=sys.argv[2],
+        metrics_dir=sys.argv[3]
     )
+
