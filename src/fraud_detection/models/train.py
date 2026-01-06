@@ -46,5 +46,8 @@ def train_model(features_dir, model_dir, metrics_dir):
         json.dump(metrics, f, indent=2)
 
 if __name__ == "__main__":
-    import sys
-    train_model(sys.argv[1], sys.argv[2], sys.argv[3])
+    train_model(
+        features_dir="data/processed/features",
+        model_dir="models",
+        metrics_dir="metrics"
+    )
