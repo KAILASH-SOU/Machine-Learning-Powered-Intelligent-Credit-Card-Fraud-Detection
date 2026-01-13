@@ -1,0 +1,44 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python -m src.preprocessing
+    deps:
+    - path: data/raw/creditcard.csv
+      hash: md5
+      md5: e90efcb83d69faf99fcab8b0255024de
+      size: 150828752
+    - path: src/preprocessing.py
+      hash: md5
+      md5: a7430b65953b56806d09c38b3b3d5f79
+      size: 1668
+    outs:
+    - path: data/split
+      hash: md5
+      md5: 20683de4c3808e17743e6a2523959feb.dir
+      size: 158132585
+      nfiles: 4
+    - path: models/scaler.pkl
+      hash: md5
+      md5: 15602d35cc0f92d3c1011d572576fb25
+      size: 807
+  train:
+    cmd: python -m src.train
+    deps:
+    - path: data/split
+      hash: md5
+      md5: 20683de4c3808e17743e6a2523959feb.dir
+      size: 158132585
+      nfiles: 4
+    - path: src/train.py
+      hash: md5
+      md5: 7d109fbb48152d34ffd8c05aba092668
+      size: 2765
+    outs:
+    - path: models/metrics.json
+      hash: md5
+      md5: 228e5d1305aa9b88875d65ba7d44f81a
+      size: 61
+    - path: models/model.pkl
+      hash: md5
+      md5: 0df47530085604092ea2bcbc517d9e85
+      size: 2775380

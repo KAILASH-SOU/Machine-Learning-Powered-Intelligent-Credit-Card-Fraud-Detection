@@ -1,0 +1,18 @@
+stages:
+  prepare:
+    cmd: python -m src.preprocessing
+    deps:
+      - data/raw/creditcard.csv
+      - src/preprocessing.py
+    outs:
+      - data/split
+      - models/scaler.pkl
+
+  train:
+    cmd: python -m src.train
+    deps:
+      - data/split
+      - src/train.py
+    outs:
+      - models/model.pkl
+      - models/metrics.json
