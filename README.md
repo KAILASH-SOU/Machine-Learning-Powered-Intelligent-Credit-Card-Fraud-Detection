@@ -1,3 +1,4 @@
+```mermaid
 graph LR
     User([User]) -- "1. Enters Transaction Data" --> UI[Streamlit Frontend\nPort: 8501]
     
@@ -22,3 +23,4 @@ graph LR
     style UI fill:#ffecb3,stroke:#ff6f00
     style API fill:#c8e6c9,stroke:#2e7d32
     style Model fill:#e1bee7,stroke:#7b1fa2
+```
