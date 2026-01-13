@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+imbalanced-learn
+lightgbm
+optuna
+fastapi
+uvicorn
+pydantic
+streamlit
+dvc

@@ -1,36 +1,23 @@
-# --- Python Basics ---
+# --- Python & Virtual Envs ---
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# --- Virtual Environments ---
+*.py[cod]
 venv/
-env/
-.venv/
-
-# --- Environment Variables (Security) ---
 .env
-.env.local
 
-# --- IDE Settings (VS Code & PyCharm) ---
+# --- OS Files (Mac/Windows) ---
+.DS_Store
+Thumbs.db
+
+# --- IDE Settings ---
 .vscode/
 .idea/
 
-# --- Jupyter Notebooks ---
-.ipynb_checkpoints/
+# --- DVC Managed Data (Block Git from seeing these) ---
+data/raw/
+data/processed/
+data/split/
 
-# --- macOS Specific (Garbage files) ---
-.DS_Store
-
-# --- DVC & Data ---
-
-*.zip
-*.tar.gz
-*.rar
-
-# --- Model Artifacts ---
-
-*.pkl
-*.h5
-*.joblib
+# --- Model Artifacts (Managed by DVC) ---
+models/*.pkl
+models/*.json
+models/*.h5
