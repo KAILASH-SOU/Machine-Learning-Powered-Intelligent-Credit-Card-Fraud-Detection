@@ -1,0 +1,9 @@
+pandas
+numpy
+scikit-learn
+dvc
+kaggle
+fastapi
+uvicorn
+pydantic
+streamlit
