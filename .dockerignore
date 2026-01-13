@@ -1,0 +1,11 @@
+# .dockerignore
+venv/
+__pycache__/
+.git/
+.dvc/
+data/           # We don't need raw training data in the app
+tests/
+dvc.lock
+dvc.yaml
+.gitignore
+README.md

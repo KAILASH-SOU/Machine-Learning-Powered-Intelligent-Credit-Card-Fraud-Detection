@@ -1,0 +1,28 @@
+services:
+  api:
+    build: .
+    container_name: fraud_detection_api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    networks:
+      - fraud_net
+
+  frontend:
+    build: .
+    container_name: fraud_detection_ui
+    command: streamlit run frontend/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:8000/predict
+    networks:
+      - fraud_net
+
+networks:
+  fraud_net:
+    driver: bridge
