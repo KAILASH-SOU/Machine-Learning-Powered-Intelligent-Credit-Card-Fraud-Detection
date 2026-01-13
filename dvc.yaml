@@ -1,28 +1,30 @@
 stages:
   ingest:
-    cmd: PYTHONPATH=src python src/fraud_detection/data/ingest.py
+    cmd: PYTHONPATH=src python src/fraud_detection/data/ingest.py data/creditcard.csv data/raw/creditcard.csv
     outs:
       - data/raw/creditcard.csv
 
   preprocess:
-    cmd: PYTHONPATH=src python src/fraud_detection/data/preprocess.py
+    cmd: PYTHONPATH=src python src/fraud_detection/data/preprocess.py data/raw/creditcard.csv data/processed/validated.csv
     deps:
       - data/raw/creditcard.csv
+      - src/fraud_detection/data/preprocess.py
     outs:
       - data/processed/validated.csv
 
   features:
-    cmd: PYTHONPATH=src python src/fraud_detection/features/build_features.py
+    cmd: PYTHONPATH=src python src/fraud_detection/features/build_features.py data/processed/validated.csv data/processed/features
     deps:
       - data/processed/validated.csv
+      - src/fraud_detection/features/build_features.py
     outs:
       - data/processed/features
 
   train:
-    cmd: PYTHONPATH=src python -m fraud_detection.models.train
+    cmd: PYTHONPATH=src python -m fraud_detection.models.train data/processed/features models metrics
     deps:
-      - src/fraud_detection/models/train.py
       - data/processed/features
+      - src/fraud_detection/models/train.py
     outs:
       - models
     metrics:

@@ -1,17 +1,23 @@
-from fraud_detection.data.ingest import ingest
-import sys
 import os
+import pandas as pd
 
 
-def run_preprocessing(raw_path: str, output_path: str):
+def preprocess(raw_path: str) -> pd.DataFrame:
+    df = pd.read_csv(raw_path)
+    df = df.dropna()
+    return df
+
+
+def save_processed(df: pd.DataFrame, output_path: str):
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-    df = ingest(raw_path)
     df.to_csv(output_path, index=False)
 
 
 if __name__ == "__main__":
+    import sys
+
     raw_path = sys.argv[1]
     output_path = sys.argv[2]
 
-    run_preprocessing(raw_path, output_path)
+    df = preprocess(raw_path)
+    save_processed(df, output_path)

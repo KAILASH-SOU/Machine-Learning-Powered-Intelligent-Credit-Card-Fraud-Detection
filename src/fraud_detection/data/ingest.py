@@ -1,25 +1,27 @@
 import pandas as pd
-from fraud_detection.data.schema import EXPECTED_COLUMNS
+import os
 
-def load_raw_data(path:str)->pd.DataFrame:
-    df = pd.read_csv(path)
+SOURCE_PATH = "data/creditcard.csv"
+
+
+def ingest(source_path: str) -> pd.DataFrame:
+    if not os.path.exists(source_path):
+        raise FileNotFoundError(f"Dataset not found at {source_path}")
+
+    df = pd.read_csv(source_path)
     return df
 
-def validate_schema(df : pd.DataFrame):
-    missing_cols = set(EXPECTED_COLUMNS)-set(df.columns)
-    if missing_cols:
-        raise ValueError(f"Missing columns:{missing_cols}")
 
-def sanity_checks(df:pd.DataFrame):
-    if df.empty:
-        raise ValueError("Dataset is empty")
-    if df.isnull().sum().sum() > 0:
-        raise ValueError("Dataset contains null values")
-    if not set(df["Class"].unique()).issubset({0,1}):
-        raise ValueError("Invalid target labels")
+def save_raw(df: pd.DataFrame, output_path: str):
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    df.to_csv(output_path, index=False)
 
 
-def ingest(path:str)->pd.DataFrame:
-    df = load_raw_data(path)
-    validate_schema(df)
-    return df
+if __name__ == "__main__":
+    import sys
+
+    source = sys.argv[1]
+    output = sys.argv[2]
+
+    df = ingest(source)
+    save_raw(df, output)

@@ -24,3 +24,10 @@ stages:
       md5: 89a1f6279bea4a4d48eae2ebb6fab76f.dir
       size: 1711
       nfiles: 1
+  ingest:
+    cmd: PYTHONPATH=src python src/fraud_detection/data/ingest.py
+    outs:
+    - path: data/raw/creditcard.csv
+      hash: md5
+      md5: dc31d6eb183be31c3ada5ab12115bdd2
+      size: 150817597
