@@ -1,20 +1,50 @@
+# =========================
 # Python
+# =========================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .env
 .venv/
+venv/
+env/
 
-# DVC
-.dvc/cache/
-
-# Ignore actual data files (NOT .dvc pointers)
-data/raw/*.csv
-data/processed/*.csv
 
 # OS
+
 .DS_Store
+Thumbs.db
+
+# Editors / IDE
+
+.vscode/
+.idea/
+
+# DVC internal
+
+.dvc/cache/
+
+
+# Data files 
+data/**/*.csv
+data/**/*.parquet
+data/**/*.npy
+
+
+# ML artifacts 
+
 models/
 metrics/
-data/processed/
-/models
-/metrics
+artifacts/
+reports/
+
+
+# Logs
+
+*.log
+
+
+# Jupyter
+
+.ipynb_checkpoints/
