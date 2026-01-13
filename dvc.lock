@@ -1,33 +1,68 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python src/fraud_detection/models/train.py data/processed/features models
-      metrics
+    cmd: PYTHONPATH=src python -m fraud_detection.models.train data/processed/features
+      models metrics
     deps:
     - path: data/processed/features
       hash: md5
-      md5: 24b976430791a72316c533f4e3d68e71.dir
-      size: 158167198
+      md5: db9a7211932698ef3e54658fc8a54c21.dir
+      size: 169595983
       nfiles: 5
     - path: src/fraud_detection/models/train.py
       hash: md5
-      md5: 3c670b49908784200ab07d43f4ead12f
-      size: 1379
+      md5: 8467ccbd4c89336a6ee21ed7f1976cd8
+      size: 1504
     outs:
-    - path: metrics
+    - path: metrics/metrics.json
       hash: md5
-      md5: d2b73de396a9a0770fab8df35e778cea.dir
-      size: 777
-      nfiles: 1
+      md5: ec5e9d1e245295953d84d68e244b126d
+      size: 810
     - path: models
       hash: md5
-      md5: 89a1f6279bea4a4d48eae2ebb6fab76f.dir
-      size: 1711
+      md5: 26574f7b3189593d2ef2874d1b00f3ae.dir
+      size: 1679
       nfiles: 1
   ingest:
-    cmd: PYTHONPATH=src python src/fraud_detection/data/ingest.py
+    cmd: PYTHONPATH=src python src/fraud_detection/data/ingest.py data/creditcard.csv
+      data/raw/creditcard.csv
     outs:
     - path: data/raw/creditcard.csv
       hash: md5
       md5: dc31d6eb183be31c3ada5ab12115bdd2
       size: 150817597
+  preprocess:
+    cmd: PYTHONPATH=src python src/fraud_detection/data/preprocess.py data/raw/creditcard.csv
+      data/processed/validated.csv
+    deps:
+    - path: data/raw/creditcard.csv
+      hash: md5
+      md5: dc31d6eb183be31c3ada5ab12115bdd2
+      size: 150817597
+    - path: src/fraud_detection/data/preprocess.py
+      hash: md5
+      md5: f0be4331405949fa931a15985e891e54
+      size: 473
+    outs:
+    - path: data/processed/validated.csv
+      hash: md5
+      md5: dc31d6eb183be31c3ada5ab12115bdd2
+      size: 150817597
+  features:
+    cmd: PYTHONPATH=src python src/fraud_detection/features/build_features.py data/processed/validated.csv
+      data/processed/features
+    deps:
+    - path: data/processed/validated.csv
+      hash: md5
+      md5: dc31d6eb183be31c3ada5ab12115bdd2
+      size: 150817597
+    - path: src/fraud_detection/features/build_features.py
+      hash: md5
+      md5: 1bbd9334dd3f87c61264a668a0735dd8
+      size: 1194
+    outs:
+    - path: data/processed/features
+      hash: md5
+      md5: db9a7211932698ef3e54658fc8a54c21.dir
+      size: 169595983
+      nfiles: 5
