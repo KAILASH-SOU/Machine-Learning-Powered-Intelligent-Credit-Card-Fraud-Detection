@@ -21,3 +21,4 @@ data/split/
 models/*.pkl
 models/*.json
 models/*.h5
+fraud-key.pem
