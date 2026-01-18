@@ -18,16 +18,17 @@ graph LR
     API -- "5. Returns Prediction (Fraud/Safe)" --> UI
     UI -- "6. Displays Result" --> User
 
-    %% --- Improved Styling Section ---
-    %% Darker container for AWS with white text
-    style AWS_EC2_Instance fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff,rx:10,ry:10
-    %% Lighter subtle container for network
-    style Docker_Network fill:#ecf0f1,stroke:#bdc3c7,stroke-width:2px,stroke-dasharray: 5 5,color:#2c3e50,rx:10,ry:10
+    %% --- High Visibility Styling ---
     
-    %% Vibrant, high-contrast component colors with white text
-    style User fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
-    style UI fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff,rx:5,ry:5
-    style API fill:#27ae60,stroke:#2ecc71,stroke-width:2px,color:#fff,rx:5,ry:5
-    style Model fill:#8e44ad,stroke:#9b59b6,stroke-width:2px,color:#fff,rx:5,ry:5
-    style Scaler fill:#8e44ad,stroke:#9b59b6,stroke-width:2px,color:#fff,rx:5,ry:5
+    %% Containers
+    style AWS_EC2_Instance fill:#f4f4f4,stroke:#333,stroke-width:3px,color:#000,rx:10,ry:10
+    style Docker_Network fill:#fff,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5,color:#000,rx:10,ry:10
+    style Model_Logic fill:#f9f9f9,stroke:#666,stroke-width:1px,color:#000
+    
+    %% Components (Black text for maximum contrast)
+    style User fill:#3498db,stroke:#000,stroke-width:2px,color:#fff
+    style UI fill:#FFCC80,stroke:#E65100,stroke-width:2px,color:#000
+    style API fill:#A5D6A7,stroke:#1B5E20,stroke-width:2px,color:#000
+    style Model fill:#CE93D8,stroke:#4A148C,stroke-width:2px,color:#000
+    style Scaler fill:#CE93D8,stroke:#4A148C,stroke-width:2px,color:#000
 ```
